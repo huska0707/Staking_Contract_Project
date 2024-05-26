@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IsMobile } from '@utils/utils';
+import WalletButton from '@components/WalletButton';
 import ModeButton from '@components/ModeButton';
 
 const Header = () => {
