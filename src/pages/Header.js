@@ -56,6 +56,96 @@ const Header = () => {
       <img src="assets/logo3.png" width="130" alt="logo" />
     }
 
+    <BreakpointProvider>
+        <Breakpoint l down>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}>
+            <MenuList
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              PaperProps={{
+                style: {
+                  maxHeight: ITEM_HEIGHT * 4.5,
+                  width: '20ch',
+                },
+              }}
+            >
+              <MenuItem onClick={handleClose}>
+                <Link to="/bonding"
+                  className={clsx("p-2 font-semibold hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                    (location?.pathname === '/' || location?.pathname === '/bonding') && "border-opacity-100 text-auxi-color"
+                  )}
+                >
+                  Bond SAM
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link to="/staking"
+                  className={clsx("p-2 font-semibold hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                    location?.pathname === '/staking' && "border-opacity-100 text-auxi-color"
+                  )}
+                >
+                  Stake SAM
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link to="/referral"
+                  className={clsx("p-2 font-semibold hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                    location?.pathname === "/referral" && "border-opacity-100 text-auxi-color"
+                  )}
+                >
+                  Referral
+                </Link>
+              </MenuItem>
+            </MenuList>
+          </Popover>
+        </Breakpoint>
+
+        <Breakpoint xl>
+          <nav className="nav text-lg">
+            <ul className="flex items-center">
+              <Link to="/bonding"
+                className={clsx("p-4 font-semibold border-b-2 border-auxi-color border-opacity-0 hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                  (location?.pathname === '/' || location?.pathname === '/bonding') && "border-opacity-100 text-auxi-color"
+                )}
+              >
+                Bond SAM
+              </Link>
+              <Link to="/staking"
+                className={clsx("p-4 font-semibold border-b-2 border-auxi-color border-opacity-0 hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                  location?.pathname === '/staking' && "border-opacity-100 text-auxi-color"
+                )}
+              >
+                Stake SAM
+              </Link>
+              <Link to="/referral"
+                className={clsx("p-4 font-semibold border-b-2 border-auxi-color border-opacity-0 hover:text-auxi-color duration-200 cursor-pointer whitespace-nowrap",
+                  location?.pathname === "/referral" && "border-opacity-100 text-auxi-color"
+                )}
+              >
+                Referral
+              </Link>
+            </ul>
+          </nav>
+        </Breakpoint>
+     </BreakpointProvider>
+
     <div className="w-1/2 sm:w-3/12 flex gap-1 sm:gap-3 justify-end items-center">
       <ModeButton />
       <WalletButton />
