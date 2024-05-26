@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import ReactLoading from "react-loading";
 import { numberWithCommas, getReferralAddr, fromWei } from "@utils/utils";
+import { formatDateTime, getUtcNow } from "@utils/utils";
 
 const Bondig = () => {
     const [bondType, setBondType] = useState(0);
@@ -132,7 +134,7 @@ const Bondig = () => {
                 </div>
                 </div>
                 <div className="flex flex-col gap-4 px-6 py-6">
-                <Button
+                    <Button
                     variant="contained"
                     sx={{
                     width: "100%",
@@ -169,21 +171,107 @@ const Bondig = () => {
                         {address ? "Get tokens" : "Connect"}
                     </span>
                     )}
-                </Button>
-                <div className="flex items-start gap-2">
-                    <Icon
-                    icon="fluent:info-24-filled"
-                    className="w-9 h-9 p-0 text-app-color"
-                    />
-                    <p className="text-gray-400 font-extralight text-sm tracking-wide py-2">
-                    Upon the completion of the vesting period, you will receive{" "}
-                    <span className="text-app-color font-semibold">+30%</span> in
-                    tokens to the amount of your initial bond.
-                    </p>
+                    </Button>
+                    <div className="flex items-start gap-2">
+                        <Icon
+                        icon="fluent:info-24-filled"
+                        className="w-9 h-9 p-0 text-app-color"
+                        />
+                        <p className="text-gray-400 font-extralight text-sm tracking-wide py-2">
+                        Upon the completion of the vesting period, you will receive{" "}
+                        <span className="text-app-color font-semibold">+30%</span> in
+                        tokens to the amount of your initial bond.
+                        </p>
+                    </div>
                 </div>
-                        </div>
+                {
+                userBond?.bonds?.length > 0 && (
+                    <div className="rounded-2xl w-full mx-auto mt-8 mb-10 bg-white text-center shadow-card dark:bg-[#161F3E] dark:text-neutral-50 z-50 p-6">
+                        {userBond?.bonds?.map((bond, index) => {
+                            const startTime = parseInt(bond.creationTime);
+                            const endTime =
+                            parseInt(bond.creationTime) + parseInt(bond.freezePeriod);
+                            return (
+                            <div className="block xl:hidden py-2" key={index}>
+                                <div className="flex flex-col gap-2">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400 font-extralight">
+                                    Date of purchase:
+                                    </span>
+                                    <span>{formatDateTime(startTime)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400 font-extralight ">
+                                    SAM Amount:
+                                    </span>
+                                    <span>
+                                    {numberWithCommas(
+                                        (((fromWei(bond.amount) *
+                                        (100 + parseInt(bond.profitPercent) / 100)) /
+                                        100) *
+                                        tokenReserve) /
+                                        ethReserve
+                                    )}{" "}
+                                    SAM
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400 font-extralight ">
+                                    PLS Amount:
+                                    </span>
+                                    <span>
+                                    {numberWithCommas(
+                                        (fromWei(bond.amount) *
+                                        (100 + parseInt(bond.profitPercent) / 100)) /
+                                        100
+                                    )}{" "}
+                                    PLS
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400 font-extralight ">
+                                    Locked Until:
+                                    </span>
+                                    <span>{formatDateTime(endTime)}</span>
+                                </div>
+                                {parseInt(bond.stakeAmount) > 0 ? (
+                                    <div className="flex justify-center">
+                                    <span className="bg-app-color w-fit px-8 py-1 rounded-full text-white text-center">
+                                        The bond is staked
+                                    </span>
+                                    </div>
+                                ) : (
+                                    <div className="w-full flex gap-2 justify-center items-center">
+                                    {getUtcNow() / 1000 > endTime ? (
+                                        <span className="bg-green-400 w-fit px-8 py-1 rounded-full text-white text-center">
+                                        The bond is closed
+                                        </span>
+                                    ) : (
+                                        <Link
+                                        to="/staking"
+                                        className="w-[40%] px-5 py-1 border border-app-color rounded-full text-center font-medium transition hover:text-white hover:bg-app-color"
+                                        >
+                                        Stake
+                                        </Link>
+                                    )}
+                                    <Icon
+                                        data-tooltip-id="my-tooltip-1"
+                                        data-tooltip-html="After the bond is completed, the tokens will<br /> be transferred to your availalbe balance!"
+                                        icon="fluent:info-24-filled"
+                                        className="w-8 h-8 p-0 text-app-color"
+                                    />
+                                    <ReactTooltip id="my-tooltip-1" place="bottom" />
+                                    </div>
+                                )}
+                                </div>
                             </div>
-                </div>
+        );
+                        })}
+                    </div>
+                )
+                }
+            </div>
+        </div>
     )
 }
 
