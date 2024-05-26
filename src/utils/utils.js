@@ -15,6 +15,14 @@ export const getUtcNow = () => {
     const now = new Date();
     return now.getTime();
 }
+
+export function fromWei(amount, decimal = 18) {
+    amount = ethers.utils.formatUnits(amount, decimal)
+    if (typeof amount === 'string') {
+      amount = Number(amount)
+    }
+    return isNaN(amount) ? 0 : amount
+  }
   
 export const getReferralAddr = () => {
     const referral = window.localStorage.getItem('ref');
