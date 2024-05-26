@@ -1,7 +1,23 @@
 import { useState, useEffect } from 'react';
-import { IsMobile } from '@utils/utils';
+import { Link, useLocation } from 'react-router-dom';
+import Breakpoint, { BreakpointProvider, setDefaultBreakpoints } from "react-socks";
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import IconButton from '@mui/material/IconButton';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import Popover from '@mui/material/Popover';
+import clsx from 'clsx';
 import WalletButton from '@components/WalletButton';
 import ModeButton from '@components/ModeButton';
+import { IsMobile } from '@utils/utils';
+
+setDefaultBreakpoints([
+    { xs: 0 },
+    { l: 1279 },
+    { xl: 1280 }
+  ]);
+
+const ITEM_HEIGHT = 48;
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState();
@@ -16,7 +32,22 @@ const Header = () => {
     const handleClose = () => {
       setAnchorEl(null);
     };
- 
+
+    useEffect(() => {
+        const header = document.getElementById("myHeader");
+        const sticky = header.offsetTop;
+        const scrollCallBack = window.addEventListener("scroll", () => {
+          if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+          } else {
+            header.classList.remove("sticky");
+          }
+        });
+        return () => {
+          window.removeEventListener("scroll", scrollCallBack);
+        };
+      }, []);
+    
  return (   
     <header id="myHeader" className="header container mx-auto top-0 flex items-center justify-between px-4 sm:px-8 py-4 z-[60] transition-all text-white">
     {IsMobile() ?
