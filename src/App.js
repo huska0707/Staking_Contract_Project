@@ -4,7 +4,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import WalletConfig from '@components/WalletConfig';
 import { Web3Provider } from 'context/web3Context';
 import useAppContext from 'context/AppContext';
+import Header from 'pages/Header';
+import Footer from 'pages/Footer';
 import Bonding from 'pages/Bondig';
+import Staking from 'pages/Staking';
 import './App.css';
 
 const darkTheme = createTheme({
@@ -27,6 +30,8 @@ function App() {
               <Header />
               <Routes>
                 <Route path="/" element={<Bonding />} />
+                <Route path="/bonding" element={<Bonding />} />
+                <Route path="/staking" element={<Staking />} />
               </Routes>
               <Footer />
             </Web3Provider>
