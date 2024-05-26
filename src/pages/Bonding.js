@@ -100,9 +100,59 @@ const Bondig = () => {
                     ))}
                 </div>
                 </div>
-            </div>
-
-        </div>
+                <div className="flex flex-col gap-4 px-6 py-6">
+                <Button
+                    variant="contained"
+                    sx={{
+                    width: "100%",
+                    borderRadius: "100px",
+                    fontSize: "20px",
+                    backgroundSize: "150% 100%",
+                    backgroundImage:
+                        "linear-gradient(210deg, #00eaff 0%, #0080ff 25%, #8000ff 60%, #e619e6 84%, #f00 100%)",
+                    transition: "all .4s ease-in-out",
+                    "&:hover": {
+                        backgroundPosition: "100% 0",
+                        transition: "all .4s ease-in-out",
+                    },
+                    "&:disabled": {
+                        opacity: "0.6",
+                    },
+                    }}
+                    disabled={pending && txType === TX_TYPE.BUY}
+                    onClick={handleBond}
+                >
+                    {pending && txType === TX_TYPE.BUY ? (
+                    <div className="flex items-center gap-2">
+                        <ReactLoading
+                        color="#fff"
+                        type="spin"
+                        width={25}
+                        height={25}
+                        className="transition"
+                        />
+                        <span className="text-white">PENDING...</span>
+                    </div>
+                    ) : (
+                    <span className="text-white">
+                        {address ? "Get tokens" : "Connect"}
+                    </span>
+                    )}
+                </Button>
+                <div className="flex items-start gap-2">
+                    <Icon
+                    icon="fluent:info-24-filled"
+                    className="w-9 h-9 p-0 text-app-color"
+                    />
+                    <p className="text-gray-400 font-extralight text-sm tracking-wide py-2">
+                    Upon the completion of the vesting period, you will receive{" "}
+                    <span className="text-app-color font-semibold">+30%</span> in
+                    tokens to the amount of your initial bond.
+                    </p>
+                </div>
+                        </div>
+                            </div>
+                </div>
     )
 }
 
