@@ -43,6 +43,11 @@ const Staking = () => {
     const [isSell, setSell] = useState(false);
     const [isClaim, setClaim] = useState(false);
 
+    const handleCopyPair = () => {
+        copyToClipboard(CONFIG.LP_CONTRACT);
+        toast.success("Successfully copied the referral link.");
+    };
+
     return (
         <div className="flex flex-col container mx-auto z-50 dark:text-neutral-50 mb-auto">
             <div className="px-6 pt-8 pb-6 text-4xl font-bold text-white">
@@ -147,6 +152,459 @@ const Staking = () => {
                             </span>
                         </div>
                         </div>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-3 w-full lg:w-2/3">
+                    <div className="flex flex-col xl:flex-row gap-3">
+                        <div className="flex flex-col justify-between gap-[26px] rounded-2xl w-full mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-4">
+                        <span className="mt-3 text-left ">Available tokens</span>
+                        <div className="flex items-center gap-2 ">
+                            <img src="assets/sam.png" alt="pls" width="46" height="46" />
+                            <div className="flex items-end gap-2">
+                            <span className="text-4xl font-semibold">
+                                {numberWithCommas(userData?.userAvailableAmount)}
+                            </span>
+                            <span className="text-lg">≈</span>
+                            <span className="text-lg">
+                                {numberWithCommas(
+                                tokenToCoin(userData?.userAvailableAmount)
+                                )}{" "}
+                                PLS
+                            </span>
+                            </div>
+                        </div>
+                        <div className="w-full flex gap-5 py-3 text-left">
+                            <Button
+                            variant="outlined"
+                            color="warning"
+                            sx={{
+                                color: "#af0cf2",
+                                padding: "3px 18px",
+                                borderColor: "#af0cf2",
+                                borderRadius: "100px",
+                                fontSize: "16px",
+                                transition: "all .3s ease-in-out",
+                                "&:hover": {
+                                borderColor: "#af0cf2",
+                                background: "#af0cf2",
+                                color: "white",
+                                transition: "all .3s ease-in-out",
+                                },
+                            }}
+                            onClick={() => {
+                                getUIData();
+                                setRebond(true);
+                            }}
+                            >
+                            ReBond
+                            </Button>
+                            <Button
+                            variant="outlined"
+                            color="warning"
+                            sx={{
+                                color: "#af0cf2",
+                                padding: "3px 18px",
+                                borderColor: "#af0cf2",
+                                borderRadius: "100px",
+                                fontSize: "16px",
+                                transition: "all .3s ease-in-out",
+                                "&:hover": {
+                                borderColor: "#af0cf2",
+                                background: "#af0cf2",
+                                color: "white",
+                                transition: "all .3s ease-in-out",
+                                },
+                            }}
+                            onClick={() => {
+                                getUIData();
+                                setSell(true);
+                            }}
+                            >
+                            Sell
+                            </Button>
+                            {false && userData?.userAvailableAmount > 0 && (
+                            <Button
+                                variant="outlined"
+                                color="warning"
+                                sx={{
+                                color: "#af0cf2",
+                                padding: "3px 18px",
+                                borderColor: "#af0cf2",
+                                borderRadius: "100px",
+                                fontSize: "16px",
+                                transition: "all .3s ease-in-out",
+                                "&:hover": {
+                                    borderColor: "#af0cf2",
+                                    background: "#af0cf2",
+                                    color: "white",
+                                    transition: "all .3s ease-in-out",
+                                },
+                                }}
+                                onClick={() => {
+                                // getUIData();
+                                // setClaim(true);
+                                }}
+                            >
+                                Claim
+                            </Button>
+                            )}
+                        </div>
+                        <Divider />
+                        <div className="flex gap-5 mb-3">
+                            <div className="flex flex-col">
+                            <span>Pair address</span>
+                            <div className="flex justify-center items-center gap-2 text-blue-500">
+                                <span>{makeShort(CONFIG.LP_CONTRACT)}</span>
+                                <IconButton size="small" onClick={handleCopyPair}>
+                                <ContentCopyIcon
+                                    fontSize="small"
+                                    className="text-blue-500"
+                                />
+                                </IconButton>
+                            </div>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                            <span>PulseX</span>
+                            <a
+                                href={PULSEX_LINK}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-500"
+                            >
+                                Go to PulseX
+                            </a>
+                            </div>
+                            <button
+                            className="flex w-12 h-12 border border-app-color bg-transparent hover:bg-app-color transition duration-300 rounded-md"
+                            onClick={addTokenCallback}
+                            >
+                            <img src="assets/metamask.png" alt="metamask" />
+                            </button>
+                        </div>
+                        </div>
+                        <div className="flex flex-col justify-between gap-6 rounded-2xl w-full mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-4">
+                        <span className="mt-3 text-left ">Your daily income</span>
+                        <span className="text-6xl ">
+                            +
+                            {userData
+                            ? parseFloat(
+                                (
+                                    Number(userData.userHoldBonus || 0) +
+                                    Number(userData.globalLiquidityBonus || 0) +
+                                    Number(userData.userLiquidityBonus || 0) +
+                                    Number(BASE_PERC)
+                                ).toFixed(2)
+                                )
+                            : parseFloat(
+                                (
+                                    Number(globalLiquidityBonus || 0) + Number(BASE_PERC)
+                                ).toFixed(2)
+                                )}
+                            %
+                        </span>
+                        <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                            <span>Base</span>
+                            <Icon
+                                data-tooltip-id="my-tooltip-3"
+                                data-tooltip-html="Base Daily Staking Yield."
+                                icon="ci:info"
+                                className="w-6 h-6 p-0 "
+                            />
+                            <ReactTooltip id="my-tooltip-3" place="bottom" />
+                            </div>
+                            <span className="font-bold ">+{Number(BASE_PERC)}%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                            <span>Liquidity Bonus</span>
+                            <Icon
+                                data-tooltip-id="my-tooltip-4"
+                                data-tooltip-html="For every 800M PLS in the liquidity<br/>pool on Pulsex.com, the daily yield<br/>will increase by 0.1%."
+                                icon="ci:info"
+                                className="w-6 h-6 p-0 "
+                            />
+                            <ReactTooltip id="my-tooltip-4" place="bottom" />
+                            </div>
+                            <span className="font-bold">
+                            +{Number(globalLiquidityBonus || 0).toFixed(2)}%
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                            <span>Hold Bonus</span>
+                            <Icon
+                                data-tooltip-id="my-tooltip-5"
+                                data-tooltip-html="If you don't claim or sell tokens within<br/>24 hours, you'll receive an additional<br/>0.05% to your daily yield."
+                                icon="ci:info"
+                                className="w-6 h-6 p-0 "
+                            />
+                            <ReactTooltip id="my-tooltip-5" place="bottom" />
+                            </div>
+                            <span className="font-bold">
+                            +{Number(userData?.userHoldBonus || 0).toFixed(2)}%
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                            <span>Personal Bonus</span>
+                            <Icon
+                                data-tooltip-id="my-tooltip-6"
+                                data-tooltip-html="For every 35M PLS added to the overall<br/>protocol liquidity, you'll receive an extra 0.1%."
+                                icon="ci:info"
+                                className="w-6 h-6 p-0 "
+                            />
+                            <ReactTooltip id="my-tooltip-6" place="bottom" />
+                            </div>
+                            <span className="font-bold ">
+                            +{Number(userData?.userLiquidityBonus || 0).toFixed(2)}%
+                            </span>
+                        </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col justify-between gap-4 rounded-2xl w-full mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-6">
+                        <span className="text-left ">Total staked</span>
+                        <div className="flex flex-col md:flex-row md:justify-between gap-3">
+                        <div className="flex flex-col justify-between w-full md:w-2/5">
+                            <div className="flex items-center gap-3">
+                            <img src="assets/sam.png" alt="pls" width="48" height="48" />
+                            <span className="text-3xl font-bold ">
+                                {numberWithCommas(totalStaked)}
+                            </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                            <Icon
+                                icon="typcn:info-outline"
+                                className="w-6 h-6 p-0 text-app-color"
+                            />
+                            <span className="text-[12px] md:text-sm text-gray-500 dark:text-neutral-400">
+                                Max staking income is 150%
+                            </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full md:w-3/5">
+                            <div className="flex justify-between">
+                            <span className="md:text-lg">Rebonded</span>
+                            <span className="md:text-lg">
+                                {numberWithCommas(userData?.totalRebonded)} SAM
+                            </span>
+                            </div>
+                            <div className="flex justify-between">
+                            <span className="md:text-lg">Sold</span>
+                            <span className="md:text-lg">
+                                {numberWithCommas(userData?.totalSold)} SAM
+                            </span>
+                            </div>
+                            <div className="flex justify-between">
+                            <span className="md:text-lg">Claimed</span>
+                            <span className="md:text-lg">
+                                {numberWithCommas(userData?.totalClaimed)} SAM
+                            </span>
+                            </div>
+                        </div>
+                        </div>
+                        <Divider />
+                        {userBond?.bonds?.map((bond, idx) => {
+                        if (parseInt(bond.stakeTime) <= 0) return undefined;
+                        return (
+                            <div className="block xl:hidden py-2" key={idx}>
+                            <div className="flex flex-col gap-2">
+                                <div className="flex justify-between">
+                                <span>
+                                    {numberWithCommas(fromWei(bond.stakeAmount))} SAM
+                                </span>
+                                </div>
+                                <div className="flex justify-between">
+                                <span className="text-gray-400 font-extralight ">
+                                    Days staked:
+                                </span>
+                                <span>
+                                    {getPassedDaysOnStake(parseInt(bond.stakeTime))} days
+                                </span>
+                                </div>
+                                <div className="flex justify-between">
+                                <span className="text-gray-400 font-extralight ">
+                                    Profit per day:
+                                </span>
+                                <span>
+                                    {isStakeActive(bond, userData) ? (
+                                    <div className="flex justify-center gap-2">
+                                        <img
+                                        src="assets/sam.png"
+                                        alt="pls"
+                                        width="26"
+                                        height="26"
+                                        />
+                                        <span>
+                                        {parseFloat(
+                                            (fromWei(bond.stakeAmount) *
+                                            (Number(userData?.userHoldBonus || 0) +
+                                                Number(
+                                                userData?.globalLiquidityBonus || 0
+                                                ) +
+                                                Number(userData?.userLiquidityBonus || 0) +
+                                                Number(BASE_PERC))) /
+                                            100
+                                        ).toFixed(2)}
+                                        </span>
+                                    </div>
+                                    ) : (
+                                    "-"
+                                    )}
+                                </span>
+                                </div>
+                                <div className="flex justify-between">
+                                <span className="text-gray-400 font-extralight ">
+                                    Profit for period:
+                                </span>
+                                <span>
+                                    <div className="flex justify-center items-center gap-2">
+                                    <img
+                                        src="assets/sam.png"
+                                        alt="pls"
+                                        width="26"
+                                        height="26"
+                                    />
+                                    <span>
+                                        {isStakeActive(bond, userData)
+                                        ? parseFloat(
+                                            (getPassedDaysOnStakeWithoutRound(
+                                                parseInt(bond.stakeTime)
+                                            ) *
+                                                fromWei(bond.stakeAmount) *
+                                                (Number(userData?.userHoldBonus || 0) +
+                                                Number(
+                                                    userData?.globalLiquidityBonus || 0
+                                                ) +
+                                                Number(
+                                                    userData?.userLiquidityBonus || 0
+                                                ) +
+                                                Number(BASE_PERC))) /
+                                                100
+                                            ).toFixed(2)
+                                        : parseFloat(
+                                            fromWei(bond.stakeAmount) * 1.5
+                                            ).toFixed(2)}
+                                    </span>
+                                    </div>
+                                </span>
+                                </div>
+                                <div className="flex justify-between">
+                                <span className="text-gray-400 font-extralight ">
+                                    Status:
+                                </span>
+                                <span>
+                                    {isStakeActive(bond, userData) ? (
+                                    <span className="block bg-green-200 text-green-500 rounded-lg w-24 py-1">
+                                        Active
+                                    </span>
+                                    ) : (
+                                    <span className="block bg-rose-200 text-red-400 rounded-lg w-24 py-1">
+                                        Completed
+                                    </span>
+                                    )}
+                                </span>
+                                </div>
+                            </div>
+                            </div>
+                        );
+                        })}
+                        <table className="table-auto hidden xl:table">
+                        <thead>
+                            <tr>
+                            <th>Stake</th>
+                            <th>Days staked</th>
+                            <th>Profit per day</th>
+                            <th>Profit for period</th>
+                            <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userBond?.bonds?.map((bond, idx) => {
+                            if (parseInt(bond.stakeTime) <= 0) return undefined;
+                            return (
+                                <tr className="h-10" key={idx}>
+                                <td className="text-center">
+                                    {numberWithCommas(fromWei(bond.stakeAmount))} SAM
+                                </td>
+                                <td className="text-center">
+                                    {getPassedDaysOnStake(parseInt(bond.stakeTime))} days
+                                </td>
+                                <td className="text-center">
+                                    {isStakeActive(bond, userData) ? (
+                                    <div className="flex justify-center gap-2">
+                                        <img
+                                        src="assets/sam.png"
+                                        alt="pls"
+                                        width="26"
+                                        height="26"
+                                        />
+                                        <span>
+                                        {parseFloat(
+                                            (fromWei(bond.stakeAmount) *
+                                            (Number(userData?.userHoldBonus || 0) +
+                                                Number(
+                                                userData?.globalLiquidityBonus || 0
+                                                ) +
+                                                Number(userData?.userLiquidityBonus || 0) +
+                                                Number(BASE_PERC))) /
+                                            100
+                                        ).toFixed(2)}
+                                        </span>
+                                    </div>
+                                    ) : (
+                                    "-"
+                                    )}
+                                </td>
+                                <td className="text-center">
+                                    <div className="flex justify-center items-center gap-2">
+                                    <img
+                                        src="assets/sam.png"
+                                        alt="pls"
+                                        width="26"
+                                        height="26"
+                                    />
+                                    <span>
+                                        {isStakeActive(bond, userData)
+                                        ? parseFloat(
+                                            (getPassedDaysOnStakeWithoutRound(
+                                                parseInt(bond.stakeTime)
+                                            ) *
+                                                fromWei(bond.stakeAmount) *
+                                                (Number(userData?.userHoldBonus || 0) +
+                                                Number(
+                                                    userData?.globalLiquidityBonus || 0
+                                                ) +
+                                                Number(
+                                                    userData?.userLiquidityBonus || 0
+                                                ) +
+                                                Number(BASE_PERC))) /
+                                                100
+                                            ).toFixed(2)
+                                        : parseFloat(
+                                            fromWei(bond.stakeAmount) * 1.5
+                                            ).toFixed(2)}
+                                    </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="flex justify-center items-center">
+                                    {isStakeActive(bond, userData) ? (
+                                        <span className="block bg-green-200 text-green-500 rounded-lg w-24 py-1">
+                                        Active
+                                        </span>
+                                    ) : (
+                                        <span className="block bg-rose-200 text-red-400 rounded-lg w-24 py-1">
+                                        Completed
+                                        </span>
+                                    )}
+                                    </div>
+                                </td>
+                                </tr>
+                            );
+                            })}
+                        </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
