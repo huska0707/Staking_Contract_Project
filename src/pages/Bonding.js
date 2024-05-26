@@ -22,6 +22,26 @@ const Bondig = () => {
       buyToken,
     } = useWeb3Context();
 
+    const fromAmountInUSD = useMemo(() => {
+        if (Number(fromAmount) === 0 || Number(pricePLS) === 0) return 0;
+        return Number(fromAmount) * Number(pricePLS);
+      }, [fromAmount, pricePLS]);
+    
+      const toAmount = useMemo(() => {
+        if (ethReserve === 0) return 0;
+        return (Number(fromAmount) * tokenReserve) / ethReserve;
+      }, [fromAmount, ethReserve, tokenReserve]);
+    
+      const samInPLS = useMemo(() => {
+        if (ethReserve === 0) return 0;
+        return ethReserve / tokenReserve;
+      }, [ethReserve, tokenReserve]);
+    
+      const handleChange = async (e) => {
+        const newValue = e.target.value;
+        setFromAmount(newValue === "" ? "" : Number(newValue));
+      };
+      
     const handleBond = async () => {
         if (!address) {
           toast.warn("Please connect wallet");
@@ -343,7 +363,7 @@ const Bondig = () => {
                             </div>
                         )}
                     </div>
-                )
+                    )
                 }
             </div>
         </div>
