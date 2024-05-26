@@ -48,6 +48,16 @@ const Staking = () => {
         toast.success("Successfully copied the referral link.");
     };
 
+    const handleChange = (e, v) => {
+        if (v < 0) return;
+        const bond = userBond?.bonds[v];
+        if (ethReserve === 0 || !bond) return;
+        setBondIdx(v);
+        const amount =
+          (fromWei(bond.amount) * (100 + parseInt(bond.profitPercent) / 100)) / 100;
+        setEthAmount(withRound(amount));
+      };
+      
     return (
         <div className="flex flex-col container mx-auto z-50 dark:text-neutral-50 mb-auto">
             <div className="px-6 pt-8 pb-6 text-4xl font-bold text-white">
