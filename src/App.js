@@ -1,18 +1,10 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import ScrollToTop from '@components/ScrollToTop';
 import WalletConfig from '@components/WalletConfig';
 import { Web3Provider } from 'context/web3Context';
 import useAppContext from 'context/AppContext';
-import Header from 'pages/Header';
-import Footer from 'pages/Footer';
 import Bonding from 'pages/Bondig';
-import Staking from 'pages/Staking';
-import Referral from 'pages/Referral';
-import Admin from 'pages/Admin';
-import Clock from "@components/Clock";
 import './App.css';
 
 const darkTheme = createTheme({
