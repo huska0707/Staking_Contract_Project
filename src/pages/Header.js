@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IsMobile } from '@utils/utils';
+import ModeButton from '@components/ModeButton';
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = useState();
