@@ -20,6 +20,37 @@ const Bondig = () => {
       buyToken,
       // withdrawToken,
     } = useWeb3Context();
+
+    const handleBond = async () => {
+        if (!address) {
+          toast.warn("Please connect wallet");
+          return;
+        }
+        if (fromAmount <= 0) {
+          toast.warn("Please input the amount");
+          return;
+        }
+        if (fromAmount < MIN_BOND_ETH) {
+          toast.warn(
+            "Bond: Minimum amount to bond is " +
+              numberWithCommas(MIN_BOND_ETH) +
+              " PLS"
+          );
+          return;
+        }
+        if (ethBalance > 0 && fromAmount > ethBalance) {
+          toast.warn("Bond: Insufficient PLS balance");
+          return;
+        }
+        if (Number(userData?.bondsNumber) + 1 > BOND_LIMIT) {
+          toast.warn("Bond: You have reached bonds limit");
+          return;
+        }
+        const refAddr = getReferralAddr();
+        await buyToken(refAddr, bondType, fromAmount);
+        setFromAmount("");
+      };
+    
     return (
         <div className="container mx-auto px-4 sm:px-8">
             <div className="block rounded-2xl w-full max-w-[600px] mx-auto bg-white text-center shadow-card dark:bg-[#161F3E] z-50 mt-8">
