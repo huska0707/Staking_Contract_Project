@@ -68,6 +68,18 @@ const Staking = () => {
         }
         await stake(bondIdx, Number(ethAmount));
       };
+    const isStakeActive = (bond, data) => {
+        const valueA =
+          (getPassedDaysOnStake(parseInt(bond.stakeTime)) *
+            fromWei(bond.stakeAmount) *
+            (Number(data?.userHoldBonus || 0) +
+              Number(data?.globalLiquidityBonus || 0) +
+              Number(data?.userLiquidityBonus || 0) +
+              Number(BASE_PERC))) /
+          100;
+        const valueB = fromWei(bond.stakeAmount) * 1.5;
+        return Number(valueA.toFixed(4)) < Number(valueB.toFixed(4));
+      };
       
     return (
         <div className="flex flex-col container mx-auto z-50 dark:text-neutral-50 mb-auto">
