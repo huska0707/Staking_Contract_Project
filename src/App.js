@@ -24,9 +24,11 @@ function App() {
         <ThemeProvider theme={darkTheme}>
           <div className="flex flex-col justify-between min-h-screen px-3 sm:px-0">
             <Web3Provider>
+              <Header />
               <Routes>
                 <Route path="/" element={<Bonding />} />
               </Routes>
+              <Footer />
             </Web3Provider>
           </div>
         </ThemeProvider>
