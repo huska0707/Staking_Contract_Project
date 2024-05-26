@@ -16,3 +16,11 @@ export const getUtcNow = () => {
     return now.getTime();
 }
   
+export const getReferralAddr = () => {
+    const referral = window.localStorage.getItem('ref');
+    if (isValidAddress(referral)) {
+      return referral;
+    } else {
+      return DEFAULT_REFERRAL_ADDR;
+    }
+}
