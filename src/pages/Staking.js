@@ -50,87 +50,104 @@ const Staking = () => {
             </div>
             <div className="flex flex-col lg:flex-row gap-3">
                 <div className="flex flex-col gap-3 w-full lg:w-1/3">
-                <div className="flex flex-col gap-[13px] rounded-2xl w-full h-fit mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-4">
-                    <div className="w-full h-20 mt-3">
-                    <SelectBond
-                        options={userBond?.bonds}
-                        pricePLS={pricePLS}
-                        tokenReserve={tokenReserve}
-                        ethReserve={ethReserve}
-                        onChange={handleChange}
-                    />
-                    </div>
-                    <div className="flex justify-between bg-[#FFF7E7] dark:bg-[#0B122C] border border-app-color dark:border-[#0d183f] border-opacity-20 px-4 py-3 h-20">
-                    <div className="flex flex-col w-[calc(100%-60px)] justify-start items-stretch">
-                        <input
-                        className="w-full  font-semibold text-2xl bg-transparent focus-visible:outline-none"
-                        readOnly
-                        value={ethAmount}
-                        ></input>
-                        <span className="text-gray-400 font-light text-left">
-                        ${numberWithCommas(tokenToUsd(ethAmount), 6)}
-                        </span>
-                    </div>
-                    <div className="flex flex-col">
-                        <div className="flex items-center justify-end gap-2">
-                        <img src="assets/pls.png" alt="pls" width="32" height="32" />
-                        <span className="text-app-color text-2xl font-bold">PLS</span>
+                    <div className="flex flex-col gap-[13px] rounded-2xl w-full h-fit mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-4">
+                        <div className="w-full h-20 mt-3">
+                        <SelectBond
+                            options={userBond?.bonds}
+                            pricePLS={pricePLS}
+                            tokenReserve={tokenReserve}
+                            ethReserve={ethReserve}
+                            onChange={handleChange}
+                        />
                         </div>
-                        <span className="text-gray-400 font-light whitespace-nowrap">
-                        Balance: {numberWithCommas(ethBalance)}
-                        </span>
-                    </div>
-                    </div>
+                        <div className="flex justify-between bg-[#FFF7E7] dark:bg-[#0B122C] border border-app-color dark:border-[#0d183f] border-opacity-20 px-4 py-3 h-20">
+                        <div className="flex flex-col w-[calc(100%-60px)] justify-start items-stretch">
+                            <input
+                            className="w-full  font-semibold text-2xl bg-transparent focus-visible:outline-none"
+                            readOnly
+                            value={ethAmount}
+                            ></input>
+                            <span className="text-gray-400 font-light text-left">
+                            ${numberWithCommas(tokenToUsd(ethAmount), 6)}
+                            </span>
+                        </div>
+                        <div className="flex flex-col">
+                            <div className="flex items-center justify-end gap-2">
+                            <img src="assets/pls.png" alt="pls" width="32" height="32" />
+                            <span className="text-app-color text-2xl font-bold">PLS</span>
+                            </div>
+                            <span className="text-gray-400 font-light whitespace-nowrap">
+                            Balance: {numberWithCommas(ethBalance)}
+                            </span>
+                        </div>
+                        </div>
 
-                    <div className="flex justify-center items-center gap-2 ">
-                    <img src="assets/sam.png" alt="pls" width="30" height="30" />
-                    <span>1 SAM</span>
-                    <span>=</span>
-                    <span className="text-app-color">
-                        {numberWithCommas(tokenToCoin(1), 6)} PLS
-                    </span>
-                    </div>
-                    <div className="w-full py-3">
-                    <Button
-                        variant="contained"
-                        sx={{
-                        width: "100%",
-                        borderRadius: "100px",
-                        fontSize: "20px",
-                        backgroundSize: "150% 100%",
-                        backgroundImage:
-                            "linear-gradient(210deg, #00eaff 0%, #0080ff 25%, #8000ff 60%, #e619e6 84%, #f00 100%)",
-                        transition: "all .4s ease-in-out",
-                        "&:hover": {
-                            backgroundPosition: "100% 0",
-                            transition: "all .4s ease-in-out",
-                        },
-                        "&:disabled": {
-                            opacity: "0.6",
-                        },
-                        }}
-                        disabled={pending && txType === TX_TYPE.STAKE}
-                        onClick={handleStake}
-                    >
-                        {pending && txType === TX_TYPE.STAKE ? (
-                        <div className="flex items-center gap-2">
-                            <ReactLoading
-                            color="#fff"
-                            type="spin"
-                            width={25}
-                            height={25}
-                            className="transition"
-                            />
-                            <span className="text-white">PENDING...</span>
-                        </div>
-                        ) : (
-                        <span className="text-white">
-                            {bondIdx >= 0 ? "Stake" : "Buy a bond"}
+                        <div className="flex justify-center items-center gap-2 ">
+                        <img src="assets/sam.png" alt="pls" width="30" height="30" />
+                        <span>1 SAM</span>
+                        <span>=</span>
+                        <span className="text-app-color">
+                            {numberWithCommas(tokenToCoin(1), 6)} PLS
                         </span>
-                        )}
-                    </Button>
+                        </div>
+                        <div className="w-full py-3">
+                        <Button
+                            variant="contained"
+                            sx={{
+                            width: "100%",
+                            borderRadius: "100px",
+                            fontSize: "20px",
+                            backgroundSize: "150% 100%",
+                            backgroundImage:
+                                "linear-gradient(210deg, #00eaff 0%, #0080ff 25%, #8000ff 60%, #e619e6 84%, #f00 100%)",
+                            transition: "all .4s ease-in-out",
+                            "&:hover": {
+                                backgroundPosition: "100% 0",
+                                transition: "all .4s ease-in-out",
+                            },
+                            "&:disabled": {
+                                opacity: "0.6",
+                            },
+                            }}
+                            disabled={pending && txType === TX_TYPE.STAKE}
+                            onClick={handleStake}
+                        >
+                            {pending && txType === TX_TYPE.STAKE ? (
+                            <div className="flex items-center gap-2">
+                                <ReactLoading
+                                color="#fff"
+                                type="spin"
+                                width={25}
+                                height={25}
+                                className="transition"
+                                />
+                                <span className="text-white">PENDING...</span>
+                            </div>
+                            ) : (
+                            <span className="text-white">
+                                {bondIdx >= 0 ? "Stake" : "Buy a bond"}
+                            </span>
+                            )}
+                        </Button>
+                        </div>
                     </div>
-                </div>
+                    <div className="flex flex-col gap-4 rounded-2xl w-full h-fit mx-auto bg-white text-center dark:bg-[#161F3E] shadow-card px-6 py-6">
+                        <div className="flex justify-between">
+                        <span>Total Liquidity</span>
+                        <span className="dark:text-gray-400">
+                            ${numberWithCommas(totalLiquidity)}
+                        </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                        <span className="truncate">Token Price</span>
+                        <div className="flex items-center gap-2">
+                            <img src="assets/sam.png" alt="pls" width="30" height="30" />
+                            <span className="dark:text-neutral-400 truncate">
+                            1 SAM = {numberWithCommas(tokenToUsd(tokenToCoin(1)), 4)} USD
+                            </span>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
