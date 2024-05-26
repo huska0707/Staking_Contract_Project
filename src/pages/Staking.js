@@ -57,6 +57,17 @@ const Staking = () => {
           (fromWei(bond.amount) * (100 + parseInt(bond.profitPercent) / 100)) / 100;
         setEthAmount(withRound(amount));
       };
+    const handleStake = async () => {
+        if (!address || bondIdx < 0) {
+          navigate("/bonding");
+          return;
+        }
+        if (ethBalance < Number(ethAmount)) {
+          toast.warn("Insufficient PLS balance to stake");
+          return;
+        }
+        await stake(bondIdx, Number(ethAmount));
+      };
       
     return (
         <div className="flex flex-col container mx-auto z-50 dark:text-neutral-50 mb-auto">
