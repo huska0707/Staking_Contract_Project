@@ -20,7 +20,6 @@ const Bondig = () => {
       userBond,
       userData,
       buyToken,
-      // withdrawToken,
     } = useWeb3Context();
 
     const handleBond = async () => {
@@ -185,7 +184,7 @@ const Bondig = () => {
                     </div>
                 </div>
                 {
-                userBond?.bonds?.length > 0 && (
+                    userBond?.bonds?.length > 0 && (
                     <div className="rounded-2xl w-full mx-auto mt-8 mb-10 bg-white text-center shadow-card dark:bg-[#161F3E] dark:text-neutral-50 z-50 p-6">
                         {userBond?.bonds?.map((bond, index) => {
                             const startTime = parseInt(bond.creationTime);
@@ -267,6 +266,82 @@ const Bondig = () => {
                             </div>
         );
                         })}
+                        {userBond && (
+                            <div className="hidden xl:flex xl:flex-col xl:gap-3 w-full text-left  px-3">
+                            <div className="w-full flex py-2">
+                                <div className="w-2/12 text-gray-400">Date of purchase</div>
+                                <div className="w-2/12 text-gray-400">SAM amount</div>
+                                <div className="w-2/12 text-gray-400">PLS amount</div>
+                                <div className="w-2/12 text-gray-400">Ends in</div>
+                                <div className="w-4/12"></div>
+                            </div>
+                            <Divider />
+                            {userBond?.bonds?.map((bond, index) => {
+                                const startTime = parseInt(bond.creationTime);
+                                const endTime =
+                                parseInt(bond.creationTime) + parseInt(bond.freezePeriod);
+                                return (
+                                <div className="flex flex-col gap-2 py-1" key={index * 100}>
+                                    <div className="flex items-center">
+                                    <div className="w-2/12">{formatDateTime(startTime)}</div>
+                                    <div className="w-2/12">
+                                        {numberWithCommas(
+                                        (((fromWei(bond.amount) *
+                                            (100 + parseInt(bond.profitPercent) / 100)) /
+                                            100) *
+                                            tokenReserve) /
+                                            ethReserve
+                                        )}{" "}
+                                        SAM
+                                    </div>
+                                    <div className="w-2/12">
+                                        {numberWithCommas(
+                                        (fromWei(bond.amount) *
+                                            (100 + parseInt(bond.profitPercent) / 100)) /
+                                            100
+                                        )}{" "}
+                                        PLS
+                                    </div>
+                                    <div className="w-2/12">{formatDateTime(endTime)}</div>
+                                    {parseInt(bond.stakeAmount) > 0 ? (
+                                        <div className="w-4/12 flex justify-end items-center">
+                                        <span className="bg-app-color w-fit px-8 py-1 rounded-full text-white text-center">
+                                            The bond is staked
+                                        </span>
+                                        </div>
+                                    ) : (
+                                        <div className="w-4/12 flex gap-2 justify-end items-center">
+                                        {getUtcNow() / 1000 > endTime ? (
+                                            <span className="bg-green-400 w-fit px-8 py-1 rounded-full text-white text-center">
+                                            The bond is closed
+                                            </span>
+                                        ) : (
+                                            <Link
+                                            to="/staking"
+                                            className="w-28 px-5 py-1 border border-app-color rounded-full text-center font-medium transition hover:text-white hover:bg-app-color"
+                                            >
+                                            Stake
+                                            </Link>
+                                        )}
+                                        <Icon
+                                            data-tooltip-id="my-tooltip-2"
+                                            data-tooltip-html="After the bond is completed, the tokens will<br /> be transferred to your availalbe balance!"
+                                            icon="fluent:info-24-filled"
+                                            className="w-8 h-8 p-0 text-app-color"
+                                        />
+                                        <ReactTooltip
+                                            id="my-tooltip-2"
+                                            place="bottom"
+                                            className="w-60"
+                                        />
+                                        </div>
+                                    )}
+                                    </div>
+                                </div>
+                                );
+                            })}
+                            </div>
+                        )}
                     </div>
                 )
                 }
