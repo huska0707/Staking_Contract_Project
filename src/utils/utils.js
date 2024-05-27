@@ -36,3 +36,7 @@ export const getReferralAddr = () => {
       return DEFAULT_REFERRAL_ADDR;
     }
 }
+
+export const isValidAddress = (addr) => {
+  return ethers.utils.isAddress(addr);
+}
