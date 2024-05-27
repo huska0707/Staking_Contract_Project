@@ -4,6 +4,7 @@ import ReactLoading from "react-loading";
 import { toast } from "react-toastify";
 import useWeb3Context from "@context/web3Context";
 import { numberWithCommas, isValidAddress } from "@utils/utils";
+import { CONFIG } from "@utils/config";
 import { TX_TYPE } from "@utils/constants";
 
 const Admin = () => {
@@ -21,6 +22,12 @@ const Admin = () => {
     influencerBond,
   } = useWeb3Context();
 
+  useEffect(() => {
+    (async () => {
+      const value = await getTokenBalanceByAddress(CONFIG.PROTOCOL_CONTRACT);
+      setBalance(value);
+    })();
+  }, [address]);
 
   const handleChange = (e) => {
     if (e.target.name === "amount") {
