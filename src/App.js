@@ -8,6 +8,7 @@ import Header from 'pages/Header';
 import Footer from 'pages/Footer';
 import Bonding from 'pages/Bondig';
 import Staking from 'pages/Staking';
+import Referral from 'pages/Referral';
 import './App.css';
 
 const darkTheme = createTheme({
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/" element={<Bonding />} />
                 <Route path="/bonding" element={<Bonding />} />
                 <Route path="/staking" element={<Staking />} />
+                <Route path="/referral" element={<Referral />} />
               </Routes>
               <Footer />
             </Web3Provider>
