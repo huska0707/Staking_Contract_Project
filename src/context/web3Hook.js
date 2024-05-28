@@ -22,7 +22,7 @@ export const useSigningWeb3Client = () => {
     ]);
   
     const { address } = useAccount();
-    
+
     useEffect(() => {
         getProtocolOwner();
         updateUserInfo();
@@ -60,6 +60,27 @@ export const useSigningWeb3Client = () => {
         }
     };
 
+    const getTokenLiquidity = async () => {
+        try {
+          // const web3 = new Web3(CONFIG.CHAIN_RPC);
+          // const contract = new web3.eth.Contract(ABI.PROTOCOL, CONFIG.PROTOCOL_CONTRACT);
+          // let result = await contract.methods.getTokenLiquidity().call();
+          // setEthReserve(fromWei(result?.liquidityETH));
+          // setTokenReserve(fromWei(result?.liquidityERC20));
+          // ethers 
+          const contract = new ethers.Contract(
+            CONFIG.PROTOCOL_CONTRACT,
+            ABI.PROTOCOL,
+            provider
+          );
+          const result = await contract.getTokenLiquidity();
+          setEthReserve(fromWei(result?.liquidityETH));
+          setTokenReserve(fromWei(result?.liquidityERC20));
+        } catch (err) {
+          console.log(err);
+        }
+    };
+      
     const updateUserInfo = async () => {
         await updateGlobalInfo();
         if (address) {
@@ -94,6 +115,8 @@ export const useSigningWeb3Client = () => {
     userData,
     bondActivations,
     globalLiquidityBonus,
+
     getTokensAmount,
+    getTokenLiquidity,
     }
 }
