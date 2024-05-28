@@ -21,6 +21,17 @@ export const useSigningWeb3Client = () => {
       false,
     ]);
   
+    const { address } = useAccount();
+    
+    useEffect(() => {
+        getProtocolOwner();
+        updateUserInfo();
+        const intVal = setInterval(() => {
+          updateUserInfo();
+        }, 3 * 60 * 1000); // 3 mins
+        return (() => clearInterval(intVal))
+      }, [address]);
+
     const getTokensAmount = async (ethAmount) => {
         try {
           const contract = new ethers.Contract(
@@ -33,8 +44,41 @@ export const useSigningWeb3Client = () => {
         } catch (err) {
           console.log(err);
         }
-      };
-      
+    };
+
+    const getProtocolOwner = async () => {
+        try {
+          const contract = new ethers.Contract(
+            CONFIG.PROTOCOL_CONTRACT,
+            ABI.PROTOCOL,
+            provider
+          );
+          const result = await contract.owner();
+          setOwner(result);
+        } catch (err) {
+          console.log(err);
+        }
+    };
+
+    const updateUserInfo = async () => {
+        await updateGlobalInfo();
+        if (address) {
+          const promise1 = getEthBalance();
+          const promise2 = getTokenBalance();
+          const promise3 = getTokenAllowance();
+          const promise4 = getUserBond();
+          const promise5 = getUIData();
+          setLoading(true);
+          await Promise.all([promise1, promise2, promise3, promise4, promise5]);
+          setLoading(false);
+        } else {
+          setTokenBalance(0);
+          setTokenAllowance(0);
+          setUserBond(null);
+          setUserData(null);
+        }
+    };
+        
     return {
             loading,
     pending,
