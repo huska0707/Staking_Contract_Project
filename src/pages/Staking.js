@@ -18,6 +18,7 @@ import {
 } from "@utils/utils";
 import { toast } from "react-toastify";
 import ReBondModal from "./Modal/ReBond";
+import SellModal from "./Modal/Sell";
 import ClaimModal from "./Modal/Claim";
 
 const Staking = () => {
@@ -656,6 +657,7 @@ const Staking = () => {
                 </div>
             </div>
             <ReBondModal open={isRebond} onClose={handleRebondClose} />
+            <SellModal open={isSell} onClose={handleSellClose} />
             <ClaimModal open={isClaim} onClose={handleClaimClose} />
         </div>
 
