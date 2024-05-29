@@ -17,6 +17,8 @@ import {
   copyToClipboard,
 } from "@utils/utils";
 import { toast } from "react-toastify";
+import ReBondModal from "./Modal/ReBond";
+import ClaimModal from "./Modal/Claim";
 
 const Staking = () => {
     const {
@@ -641,6 +643,8 @@ const Staking = () => {
                     </div>
                 </div>
             </div>
+            <ReBondModal open={isRebond} onClose={handleRebondClose} />
+            <ClaimModal open={isClaim} onClose={handleClaimClose} />
         </div>
 
     )
