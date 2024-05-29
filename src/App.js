@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import WalletConfig from '@components/WalletConfig';
 import { Web3Provider } from 'context/web3Context';
 import useAppContext from 'context/AppContext';
+import ScrollToTop from '@components/ScrollToTop';
 import Header from 'pages/Header';
 import Footer from 'pages/Footer';
 import Bonding from 'pages/Bondig';
@@ -42,6 +43,7 @@ function App() {
           </div>
         </ThemeProvider>
       </WalletConfig>
+      <ScrollToTop />
     </div >
   );
 }
