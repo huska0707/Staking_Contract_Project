@@ -82,7 +82,19 @@ const Staking = () => {
         const valueB = fromWei(bond.stakeAmount) * 1.5;
         return Number(valueA.toFixed(4)) < Number(valueB.toFixed(4));
       };
+    
+    const getPassedDaysOnStake = (time) => {
+        const value = Math.floor((Math.floor(getUtcNow() / 1000) - time) / ONE_DAY);
+        if (value < 0) return 0;
+        else return value;
+    };
       
+    const getPassedDaysOnStakeWithoutRound = (time) => {
+        const value = (Math.floor(getUtcNow() / 1000) - time) / ONE_DAY;
+        if (value < 0) return "-";
+        else return value.toFixed(4);
+    };
+    
     return (
         <div className="flex flex-col container mx-auto z-50 dark:text-neutral-50 mb-auto">
             <div className="px-6 pt-8 pb-6 text-4xl font-bold text-white">
