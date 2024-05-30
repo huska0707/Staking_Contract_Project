@@ -23,3 +23,9 @@ export function useEthersSigner({ chainId } = {}) {
     [walletClient],
   )
 }
+
+export function useEthersProvider({ chainId } = {}) {
+  const publicClient = usePublicClient({ chainId })
+  return publicClientToProvider(publicClient)
+}
+

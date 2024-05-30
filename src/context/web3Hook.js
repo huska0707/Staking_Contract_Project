@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import {
+    useEthersSigner,
+    useEthersProvider,
+  } from "@utils/ethersAdapter";
 
 export const useSigningWeb3Client = () => {
     const [ethBalance, setEthBalance] = useState(0);
@@ -20,7 +24,10 @@ export const useSigningWeb3Client = () => {
       false,
       false,
     ]);
-  
+
+    const signer = useEthersSigner(chain?.id ?? CONFIG.CHAIN_ID);
+    const provider = useEthersProvider(chain?.id ?? CONFIG.CHAIN_ID);
+
     const { address } = useAccount();
 
     useEffect(() => {
@@ -100,6 +107,55 @@ export const useSigningWeb3Client = () => {
         }
     };
         
+    const buyToken = async (uplineAddress, bondType, ethAmount) => {
+        try {
+          setPending(true);
+          setTxType(TX_TYPE.BUY);
+          const contract = new ethers.Contract(
+            CONFIG.PROTOCOL_CONTRACT,
+            ABI.PROTOCOL,
+            signer
+          );
+          const params = [uplineAddress, bondType];
+          const transaction = {
+            from: address,
+            to: CONFIG.PROTOCOL_CONTRACT,
+            data: contract.interface.encodeFunctionData("buy", params),
+            value: toWei(ethAmount),
+          };
+    
+          await provider.estimateGas(transaction);
+          const tx = await contract.buy(uplineAddress, bondType, {
+            value: toWei(ethAmount),
+          });
+          toast.success(
+            "Transaction has successfully entered the blockchain! Waiting for enough confirmations..."
+          );
+          await tx.wait();
+          await updateUserInfo();
+          toast.success(
+            <span>
+              Successfully bonded the token.{" "}
+              <a
+                className="text-blue-500"
+                href={`${CONFIG.CHAIN_SCAN}${tx?.hash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on scan
+              </a>
+            </span>
+          );
+        } catch (err) {
+          console.log(err);
+          const { error } = decodeError(err);
+          toast.error(error);
+        } finally {
+          setTxType(TX_TYPE.NONE);
+          setPending(false);
+        }
+      };
+
     return {
             loading,
     pending,
@@ -118,5 +174,6 @@ export const useSigningWeb3Client = () => {
 
     getTokensAmount,
     getTokenLiquidity,
+    buyToken,
     }
 }
