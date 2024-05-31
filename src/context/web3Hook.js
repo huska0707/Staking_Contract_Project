@@ -45,55 +45,6 @@ export const useSigningWeb3Client = () => {
         return (() => clearInterval(intVal))
       }, [address]);
 
-    const getTokensAmount = async (ethAmount) => {
-        try {
-          const contract = new ethers.Contract(
-            CONFIG.PROTOCOL_CONTRACT,
-            ABI.PROTOCOL,
-            provider
-          );
-          const result = await contract.getTokensAmount(toWei(ethAmount));
-          return fromWei(result);
-        } catch (err) {
-          console.log(err);
-        }
-    };
-
-    const getProtocolOwner = async () => {
-        try {
-          const contract = new ethers.Contract(
-            CONFIG.PROTOCOL_CONTRACT,
-            ABI.PROTOCOL,
-            provider
-          );
-          const result = await contract.owner();
-          setOwner(result);
-        } catch (err) {
-          console.log(err);
-        }
-    };
-
-    const getTokenLiquidity = async () => {
-        try {
-          // const web3 = new Web3(CONFIG.CHAIN_RPC);
-          // const contract = new web3.eth.Contract(ABI.PROTOCOL, CONFIG.PROTOCOL_CONTRACT);
-          // let result = await contract.methods.getTokenLiquidity().call();
-          // setEthReserve(fromWei(result?.liquidityETH));
-          // setTokenReserve(fromWei(result?.liquidityERC20));
-          // ethers 
-          const contract = new ethers.Contract(
-            CONFIG.PROTOCOL_CONTRACT,
-            ABI.PROTOCOL,
-            provider
-          );
-          const result = await contract.getTokenLiquidity();
-          setEthReserve(fromWei(result?.liquidityETH));
-          setTokenReserve(fromWei(result?.liquidityERC20));
-        } catch (err) {
-          console.log(err);
-        }
-    };
-      
     const updateUserInfo = async () => {
         await updateGlobalInfo();
         if (address) {
@@ -162,6 +113,8 @@ export const useSigningWeb3Client = () => {
         }
       };
 
+/*************************  Read Function   ****************************/
+    
     const getEthBalance = async () => {
       try {
         if (!provider) return;
@@ -185,6 +138,63 @@ export const useSigningWeb3Client = () => {
         console.log(err);
       }
     };
+
+    const getTokensAmount = async (ethAmount) => {
+      try {
+        const contract = new ethers.Contract(
+          CONFIG.PROTOCOL_CONTRACT,
+          ABI.PROTOCOL,
+          provider
+        );
+        const result = await contract.getTokensAmount(toWei(ethAmount));
+        return fromWei(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+   const getProtocolOwner = async () => {
+      try {
+        const contract = new ethers.Contract(
+          CONFIG.PROTOCOL_CONTRACT,
+          ABI.PROTOCOL,
+          provider
+        );
+        const result = await contract.owner();
+        setOwner(result);
+      } catch (err) {
+        console.log(err);
+      }
+   };
+
+   const getTokenLiquidity = async () => {
+      try {
+        const contract = new ethers.Contract(
+          CONFIG.PROTOCOL_CONTRACT,
+          ABI.PROTOCOL,
+          provider
+        );
+        const result = await contract.getTokenLiquidity();
+        setEthReserve(fromWei(result?.liquidityETH));
+        setTokenReserve(fromWei(result?.liquidityERC20));
+      } catch (err) {
+        console.log(err);
+      }
+   };
+
+   const getTokenBalanceByAddress = async (addr) => {
+    try {
+      const contract = new ethers.Contract(
+        CONFIG.SAM_CONTRACT,
+        ABI.SAM,
+        provider
+      );
+      const result = await contract.balanceOf(addr);
+      return fromWei(result);
+    } catch(err) {
+      console.log(err)
+    }
+   };
 
     return {
     loading,
