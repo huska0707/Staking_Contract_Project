@@ -5,6 +5,12 @@ import {
     useEthersProvider,
   } from "@utils/ethersAdapter";
 
+  import {
+    fromWei,
+    toWei,
+  } from "@utils/utils";
+import { CONFIG } from "@utils/config";
+
 export const useSigningWeb3Client = () => {
     const [ethBalance, setEthBalance] = useState(0);
     const [tokenBalance, setTokenBalance] = useState(0);
@@ -156,8 +162,32 @@ export const useSigningWeb3Client = () => {
         }
       };
 
+    const getEthBalance = async () => {
+      try {
+        if (!provider) return;
+        const balance = await provider.getBalance(address);
+        setEthBalance(fromWei(balance))
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
+    const getTokenBalance = async () => {
+      try {
+        const contract = new ethers.Contract(
+          CONFIG.SAM_CONTRACT,
+          ABI.SAM,
+          provider
+        );
+        const result = await contract.balanceOf(address);
+        setTokenBalance(fromWei(result));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     return {
-            loading,
+    loading,
     pending,
     txType,
     address,
