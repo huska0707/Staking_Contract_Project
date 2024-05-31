@@ -40,3 +40,23 @@ export const getReferralAddr = () => {
 export const isValidAddress = (addr) => {
   return ethers.utils.isAddress(addr);
 }
+
+export const copyToClipboard = (data) => {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(data);
+  } else {
+    var textField = document.createElement('textarea')
+    textField.innerText = data;
+    textField.style.position = "fixed";
+    textField.style.left = "-999999px";
+    textField.style.top = "-999999px";
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
+}
+
+export const makeShort = (text, len = 5) => {
+  return text.substring(0, len) + "...." + text.substring(text.length - len.length)
+}
