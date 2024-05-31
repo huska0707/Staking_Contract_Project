@@ -35,7 +35,6 @@ const Bonding = () => {
     userBond,
     userData,
     buyToken,
-    // withdrawToken,
   } = useWeb3Context();
 
   const fromAmountInUSD = useMemo(() => {
@@ -289,6 +288,7 @@ const Bonding = () => {
                           Stake
                         </Link>
                       )}
+
                       <Icon
                         data-tooltip-id="my-tooltip-1"
                         data-tooltip-html="After the bond is completed, the tokens will<br /> be transferred to your availalbe balance!"
