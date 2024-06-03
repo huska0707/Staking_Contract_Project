@@ -237,6 +237,16 @@ export const useSigningWeb3Client = () => {
     }
   };
 
+  const tokenToUsd = (tokenAmount) => {
+    return !tokenAmount || !pricePLS ? "0.00" : Number(tokenAmount)* pricePLS;
+  }
+
+  const tokenToCoin = (tokenAmount) => {
+    return !tokenAmount || tokenReserve <= 0 || Number(tokenAmount) < 0.1 
+    ? "0.0000"
+    : (Number(tokenAmount) * ethReserve) / tokenReserve;
+  } 
+
     return {
     loading,
     pending,
@@ -255,6 +265,8 @@ export const useSigningWeb3Client = () => {
 
     getTokensAmount,
     getTokenLiquidity,
+    tokenToUsd,
+    tokenToCoin,
     getTokenBalanceByAddress,
     buyToken,
     getUIData,
