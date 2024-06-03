@@ -10,6 +10,7 @@ import {
     toWei,
   } from "@utils/utils";
 import { ABI, CONFIG } from "@utils/config";
+import { TX_TYPE } from "@utils/constants";
 
 export const useSigningWeb3Client = () => {
     const [ethBalance, setEthBalance] = useState(0);
@@ -112,6 +113,53 @@ export const useSigningWeb3Client = () => {
           setPending(false);
         }
       };
+    
+    const withdrawToken = async (bondIndex) => {
+        try {
+          setPending(true);
+          setTxType(TX_TYPE.WITHDRAW);
+          const contract = new ethers.Contract(
+            CONFIG.PROTOCOL_CONTRACT,
+            ABI.PROTOCOL,
+            signer
+          );
+          const params = [bondIndex];
+          const transaction = {
+            from: address,
+            to: CONFIG.PROTOCOL_CONTRACT,
+            data: contract.interface.encodeFunctionData("transfer", params),
+          };
+    
+          await provider.estimateGas(transaction);
+          const tx = await contract.transfer(bondIndex);
+          toast.success(
+            "Transaction has successfully entered the blockchain! Waiting for enough confirmations..."
+          );
+          await tx.wait();
+          await updateUserInfo();
+          toast.success(
+            <span>
+              Successfully withdrawn the token.{" "}
+              <a
+                className="text-blue-500"
+                href={`${CONFIG.CHAIN_SCAN}${tx?.hash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on scan
+              </a>
+            </span>
+          );
+        } catch (err) {
+          console.log(err);
+          const { error } = decodeError(err);
+          toast.error(error);
+        } finally {
+          setTxType(TX_TYPE.NONE);
+          setPending(false);
+        }
+      };
+    
 
 /*************************  Read Function   ****************************/
     
@@ -247,7 +295,7 @@ export const useSigningWeb3Client = () => {
     : (Number(tokenAmount) * ethReserve) / tokenReserve;
   } 
 
-    return {
+   return {
     loading,
     pending,
     txType,
@@ -268,7 +316,9 @@ export const useSigningWeb3Client = () => {
     tokenToUsd,
     tokenToCoin,
     getTokenBalanceByAddress,
-    buyToken,
     getUIData,
+
+    buyToken,
+    withdrawToken,
     }
 }
