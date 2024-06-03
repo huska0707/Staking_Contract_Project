@@ -9,7 +9,7 @@ import {
     fromWei,
     toWei,
   } from "@utils/utils";
-import { CONFIG } from "@utils/config";
+import { ABI, CONFIG } from "@utils/config";
 
 export const useSigningWeb3Client = () => {
     const [ethBalance, setEthBalance] = useState(0);
@@ -196,6 +196,47 @@ export const useSigningWeb3Client = () => {
     }
    };
 
+   const getUIData = async () => {
+    try {
+      if (!address) return;
+      const contract = new ethers.Contract(
+        CONFIG.PROTOCOL_CONTRACT,
+        ABI.PROTOCOL,
+        provider
+      );
+      const result = await contract.getUIData(address);
+      const r = result[0];
+      const data = {
+        upline: r.upline,
+        refLevel: r.refLevel,
+        bondsNumber: r.bondsNumber,
+        totalInvested: parseFloat(fromWei(r.totalInvested)),
+        liquidityCreated: parseFloat(fromWei(r.liquidityCreated)),
+        totalRefReward: parseFloat(fromWei(r.totalRefReward)),
+        totalRebonded: parseFloat(fromWei(r.totalRebonded)),
+        totalSold: parseFloat(fromWei(r.totalSold)),
+        totalClaimed: parseFloat(fromWei(r.totalClaimed)),
+        refTurnover: parseFloat(fromWei(r.refTurnover)),
+        userAvailableAmount: parseFloat(fromWei(result.userTokensBalance)),
+        userHoldBonus: ((Number(result.userHoldBonus) / 10000) * 100).toFixed(2),
+        userLiquidityBonus: ((Number(result.userLiquidityBonus) / 10000) * 100).toFixed(2),
+        globalLiquidityBonus: ((Number(result.globalLiquidityBonus) / 10000) * 100).toFixed(2),
+        bondTypeStatus: {
+          0: result[5][0],
+          1: result[5][1],
+          2: result[5][2],
+          3: result[5][3],
+        },
+        referralsNumber: parseFloat(r.refsNumber),
+        referrals: r.refs,
+      };
+      setBondActivations(result?.bondActivations?.slice(0, 4))
+      setUserData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
     return {
     loading,
     pending,
@@ -214,6 +255,8 @@ export const useSigningWeb3Client = () => {
 
     getTokensAmount,
     getTokenLiquidity,
+    getTokenBalanceByAddress,
     buyToken,
+    getUIData,
     }
 }
