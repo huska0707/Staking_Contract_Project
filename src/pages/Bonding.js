@@ -35,6 +35,7 @@ const Bonding = () => {
     userBond,
     userData,
     buyToken,
+    withdrawToken,
   } = useWeb3Context();
 
   const fromAmountInUSD = useMemo(() => {
@@ -86,6 +87,11 @@ const Bonding = () => {
     await buyToken(refAddr, bondType, fromAmount);
     setFromAmount("");
   };
+
+  const handleSell = async (bondIndex) => {
+    await withdrawToken(bondIndex);
+    setFromAmount();
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-8">
@@ -287,6 +293,40 @@ const Bonding = () => {
                         >
                           Stake
                         </Link>
+                      )}
+
+                      {getUtcNow() / 1000 > endTime && (
+                        <Button
+                          variant="outline"
+                          sx={{
+                            width: "40%",
+                            border: "solid 1px #af0cf2",
+                            borderRadius: "100px",
+                            fontSize: "16px",
+                            padding: "2.5px 20px",
+                            textTransform: "capitalize",
+                            "&:hover": {
+                              background: "#af0cf2",
+                              color: "white",
+                            },
+                          }}
+                          disabled={pending && txType === TX_TYPE.WITHDRAW}
+                          onClick={() => handleSell(index)}
+                        >
+                          {pending && txType === TX_TYPE.WITHDRAW ? (
+                            <div className="flex items-center py-[2px]">
+                              <ReactLoading
+                                color="#af0cf2"
+                                type="spin"
+                                width={25}
+                                height={25}
+                                className="transition"
+                              />
+                            </div>
+                          ) : (
+                            <span>Withdraw</span>
+                          )}
+                        </Button>
                       )}
 
                       <Icon

@@ -44,3 +44,7 @@ export function publicClientToProvider(publicClient) {
     )
     return new providers.JsonRpcProvider(transport.url, network)
 }
+
+export function useWeb3Provider(rpcUrl) {
+  return new Web3(rpcUrl);
+}
