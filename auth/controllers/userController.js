@@ -26,3 +26,35 @@ exports.registerUser = asyncErrorHandler(async (req, res, next) => {
 
     sendToken(user, 201, res);
 });
+
+exports.loginUser = asyncErrorHandler(async(req, res, next) => {
+    const { email, password } = req.body;
+
+    if(!email || !password) {
+        return next(new ErrorHandler("Please Enter Email And Password", 400));
+    }
+
+    const user = await User.findOne({email}).select("+password");
+    if(!user) {
+        return next(new ErrorHandler("Invalid Email or Password", 401));
+    }
+
+    const isPasswordMatched = await user.comparePassword(password);
+
+    if(!isPasswordMatched) {
+        return next(new ErrorHandler("Invalid Email or Password", 401));
+    }
+    sendToken(user, 201, res);
+})
+
+exports.logoutUser = asyncErrorHandler(async(req, res, next) => {
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Logged Out",
+    })
+})
