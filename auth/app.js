@@ -8,4 +8,6 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+const user = require("./routes/userRoute");
+
 module.exports = app;
